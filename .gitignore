@@ -1,5 +1,5 @@
 /bin
 /build
 compile_commands.json
-./.vscode
-./.idea
+/.vscode
+/.idea
