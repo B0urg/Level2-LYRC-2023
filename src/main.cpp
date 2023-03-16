@@ -41,7 +41,8 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
 /*                              User Control Task                            */
-/*                                                                           */
+/* This function will run after the 15 seconds autonomous period and will    */
+/*         last 1:45 and is basically used to controll the motors            */
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
