@@ -15,6 +15,8 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
+int potPosZero = 0;
+
 // global instances of devices
 
 /*---------------------------------------------------------------------------*/
@@ -25,7 +27,7 @@ competition Competition;
 void pre_auton(void) {
   // Initializing Robot Configuration.
   vexcodeInit();
-
+  potPosZero = pot1.value(rotationUnits::deg);
   // TODO: clearing encoders, setting servo positions, ...
 }
 
@@ -36,6 +38,7 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
+
 }
 
 /*---------------------------------------------------------------------------*/
@@ -56,6 +59,18 @@ void usercontrol(void) {
   }
 }
 
+void shoot(){
+  while(potPos() != potPosZero){
+    catapult_motor.spin(directionType::fwd);
+  }
+  catapult_motor.setBrake(brakeType::hold);
+  wait(1000, timeUnits::msec);
+  catapult_motor.setBrake(brakeType::coast);
+}
+
+int potPos(){
+  return pot1.value(rotationUnits::deg) - potPosZero;
+}
 
 int main() {
   // Run the pre-autonomous function.
