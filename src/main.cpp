@@ -27,6 +27,17 @@ void pre_auton(void) {
   // Initializing Robot Configuration.
   vexcodeInit();
   controller1.ButtonR1.pressed(shoot);
+
+  while(!BumperB.pressing()){
+    catapult_motor.spin(directionType::fwd);
+  }
+  catapult_motor.stop();
+  catapult_motor.resetPosition();
+  while(catapult_motor.position(rotationUnits::deg) != 530){
+    catapult_motor.spin(directionType::fwd);
+  }
+  catapult_motor.stop(brakeType::hold);
+
   // TODO: clearing encoders, setting servo positions, ...
 }
 
