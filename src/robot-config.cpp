@@ -4,8 +4,8 @@ using namespace vex;
 
 // A global instance of brain used for printing to the V5 brain screen
 brain Brain;
-vex::motor      motor_right(vex::PORT6, vex::gearSetting::ratio18_1, true);
-vex::motor      motor_left(vex::PORT7, vex::gearSetting::ratio18_1, false);
+vex::motor      motor_right(vex::PORT6, vex::gearSetting::ratio18_1, false);
+vex::motor      motor_left(vex::PORT7, vex::gearSetting::ratio18_1, true);
 vex::controller controller1(vex::controllerType::primary);
 vex::motor      catapult_motor(vex::PORT8, vex::gearSetting::ratio18_1, false);
 vex::bumper     BumperB(Brain.ThreeWirePort.B);
