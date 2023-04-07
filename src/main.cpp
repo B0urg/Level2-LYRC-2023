@@ -15,7 +15,6 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
-int potPosZero = 0;
 
 // global instances of devices
 
@@ -27,7 +26,7 @@ int potPosZero = 0;
 void pre_auton(void) {
   // Initializing Robot Configuration.
   vexcodeInit();
-  potPosZero = pot1.value(rotationUnits::deg);
+  controller1.ButtonR1.pressed(shoot);
   // TODO: clearing encoders, setting servo positions, ...
 }
 
@@ -50,27 +49,31 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
+  controller1.ButtonA.pressed(shoot);
+
   while (1) {
     //Left motor, vertical axis of left joystick
     motor_left.spin(vex::directionType::fwd, controller1.Axis3.position(vex::percentUnits::pct), vex::velocityUnits::pct);
     //Right motor, vertical axis of right joystick
     motor_right.spin(vex::directionType::fwd, controller1.Axis2.position(vex::percentUnits::pct), vex::velocityUnits::pct);
-    wait(20, msec); // Sleep the task for a short amount of time to
+    wait(20, msec);
   }
 }
 
 void shoot(){
-  while(potPos() != potPosZero){
+  while(!BumperB.pressing()){
     catapult_motor.spin(directionType::fwd);
   }
-  catapult_motor.setBrake(brakeType::hold);
-  wait(1000, timeUnits::msec);
-  catapult_motor.setBrake(brakeType::coast);
+  catapult_motor.stop();
+  catapult_motor.resetPosition();
+  wait(1000, msec);
+  while(catapult_motor.position(rotationUnits::deg) != 530){
+    catapult_motor.spin(directionType::fwd);
+  }
+  catapult_motor.stop();
 }
 
-int potPos(){
-  return pot1.value(rotationUnits::deg) - potPosZero;
-}
+
 
 int main() {
   // Run the pre-autonomous function.

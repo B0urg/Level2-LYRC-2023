@@ -8,7 +8,7 @@ vex::motor      motor_right(vex::PORT6, vex::gearSetting::ratio18_1, true);
 vex::motor      motor_left(vex::PORT7, vex::gearSetting::ratio18_1, false);
 vex::controller controller1(vex::controllerType::primary);
 vex::motor      catapult_motor(vex::PORT8, vex::gearSetting::ratio18_1, false);
-vex::potV2      pot1(Brain.ThreeWirePort.A);
+vex::bumper     BumperB(Brain.ThreeWirePort.B);
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *

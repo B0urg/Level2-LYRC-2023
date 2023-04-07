@@ -5,7 +5,7 @@ extern vex::motor      motor_right;
 extern vex::motor      motor_left;
 extern vex::controller controller1;
 extern vex::motor      catapult_motor;
-extern vex::potV2      pot1; 
+extern vex::bumper     BumperB;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
