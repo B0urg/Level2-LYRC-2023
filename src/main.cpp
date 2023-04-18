@@ -74,10 +74,6 @@ void pre_auton(void) {
   vexcodeInit();
   if(!LimitB.pressing()) spinTillPressed(LimitB, catapult_motor);
 
-  controller1.ButtonB.pressed(expand);
-  controller1.ButtonR1.pressed(shoot);
-  controller1.ButtonX.pressed(setIntake);
-
 }
   /**
    * 
@@ -116,6 +112,9 @@ void usercontrol(void) {
     motor_left.spin(vex::directionType::fwd, controller1.Axis3.position(vex::percentUnits::pct), vex::velocityUnits::pct);
     //Right motor, vertical axis of right joystick
     motor_right.spin(vex::directionType::fwd, controller1.Axis2.position(vex::percentUnits::pct), vex::velocityUnits::pct);
+    if(controller1.ButtonR1.pressing()) shoot();
+    if(controller1.ButtonB.pressing()) expand();
+    if(controller1.ButtonX.pressing()) setIntake();
     wait(20, msec);
   }
 }
