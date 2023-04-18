@@ -23,23 +23,73 @@ competition Competition;
 /*                                                                           */
 /*---------------------------------------------------------------------------*/
 
+void spinTillPressed(bumper b, motor m){
+  bool done = false;
+  while(!done){
+    m.spin(directionType::fwd);
+    if(b.pressing()){
+      done = true;
+      m.stop();
+    }
+  }
+}
+void spinTillPressed(limit l, motor m){
+  bool done = false;
+  while(!done){
+    m.spin(directionType::fwd);
+    if(l.pressing()){
+      done = true;
+      m.stop();
+    }
+  }
+}
+
+void shoot(){
+  catapult_motor.setBrake(brakeType::coast);
+  if(!LimitB.pressing()) spinTillPressed(LimitB, catapult_motor);
+  spinTillPressed(BumperA, catapult_motor);
+  spinTillPressed(LimitB, catapult_motor);
+  catapult_motor.setBrake(brakeType::hold);
+}
+
+void expand(){
+  Brain.Screen.print("pressed");
+  expandLeft.spin(directionType::fwd, 200, velocityUnits::pct);
+  expandRight.spin(directionType::fwd, 200, velocityUnits::pct);
+  wait(2000, msec);
+  expandLeft.stop();
+  expandRight.stop();
+  }
+void setIntake(){
+  if(!intakeMotor.isSpinning()){
+    intakeMotor.spin(directionType::fwd);
+  }else{
+    intakeMotor.stop();
+  }
+}
+
+
 void pre_auton(void) {
   // Initializing Robot Configuration.
   vexcodeInit();
-  controller1.ButtonR1.pressed(shoot);
+  if(!LimitB.pressing()) spinTillPressed(LimitB, catapult_motor);
 
-  while(!BumperB.pressing()){
-    catapult_motor.spin(directionType::fwd);
-  }
+  controller1.ButtonB.pressed(expand);
+  controller1.ButtonR1.pressed(shoot);
+  controller1.ButtonX.pressed(setIntake);
+
+}
+  /**
+   * 
+  
   catapult_motor.stop();
   catapult_motor.resetPosition();
   while(catapult_motor.position(rotationUnits::deg) != 530){
     catapult_motor.spin(directionType::fwd);
   }
   catapult_motor.stop(brakeType::hold);
-
+  */
   // TODO: clearing encoders, setting servo positions, ...
-}
 
 /*---------------------------------------------------------------------------*/
 /*                                                                           */
@@ -60,7 +110,6 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
-  controller1.ButtonA.pressed(shoot);
 
   while (1) {
     //Left motor, vertical axis of left joystick
@@ -70,20 +119,6 @@ void usercontrol(void) {
     wait(20, msec);
   }
 }
-
-void shoot(){
-  while(!BumperB.pressing()){
-    catapult_motor.spin(directionType::fwd);
-  }
-  catapult_motor.stop();
-  catapult_motor.resetPosition();
-  wait(1000, msec);
-  while(catapult_motor.position(rotationUnits::deg) != 530){
-    catapult_motor.spin(directionType::fwd);
-  }
-  catapult_motor.stop();
-}
-
 
 
 int main() {
