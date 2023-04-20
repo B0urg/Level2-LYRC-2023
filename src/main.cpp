@@ -14,7 +14,9 @@ using namespace vex;
 
 // A global instance of competition
 competition Competition;
-
+bool collecting = false;
+enum colorTypes {blue, red, undefined};
+colorTypes roundColor = colorTypes::undefined;
 
 // global instances of devices
 
@@ -43,8 +45,29 @@ void spinTillPressed(limit l, motor m){
     }
   }
 }
-
-void shoot(){
+void setRoundColorRed(void){
+  if(roundColor == colorTypes::red) return;
+  if(roundColor == colorTypes::blue){
+    Brain.Screen.clearScreen();
+    Brain.Screen.setCursor(1,1);
+  }else{
+    Brain.Screen.newLine();
+  }
+  roundColor = colorTypes::red;
+  Brain.Screen.print("Color : Red");
+}
+void setRoundColorBlue(void){
+  if(roundColor == colorTypes::blue) return;
+  if(roundColor == colorTypes::red){
+    Brain.Screen.clearScreen();
+    Brain.Screen.setCursor(1,1);
+  }else{
+    Brain.Screen.newLine();
+  }
+  roundColor = colorTypes::blue;
+  Brain.Screen.print("Color : Blue");
+}
+void shoot(void){
   catapult_motor.setBrake(brakeType::coast);
   if(!LimitB.pressing()) spinTillPressed(LimitB, catapult_motor);
   spinTillPressed(BumperA, catapult_motor);
@@ -52,25 +75,33 @@ void shoot(){
   catapult_motor.setBrake(brakeType::hold);
 }
 
-void expand(){
-  Brain.Screen.print("pressed");
+void expand(void){
   expandLeft.spin(directionType::fwd, 200, velocityUnits::pct);
   expandRight.spin(directionType::fwd, 200, velocityUnits::pct);
   wait(2000, msec);
   expandLeft.stop();
   expandRight.stop();
   }
-void setIntake(){
-  if(!intakeMotor.isSpinning()){
-    intakeMotor.spin(directionType::fwd);
-  }else{
+void setIntake(void){
+  Brain.Screen.print("pressed");
+  if(collecting){
+    collecting = false;
     intakeMotor.stop();
+  }else{
+    collecting = true;
+    intakeMotor.spin(directionType::fwd);
   }
 }
 
 
 void pre_auton(void) {
   // Initializing Robot Configuration.
+  controller1.ButtonR1.pressed(shoot);
+  controller1.ButtonX.pressed(setIntake);
+  controller1.ButtonB.pressed(expand);
+  controller1.ButtonA.pressed(setRoundColorRed);
+  controller1.ButtonY.pressed(setRoundColorBlue);
+
   vexcodeInit();
   if(!LimitB.pressing()) spinTillPressed(LimitB, catapult_motor);
 
@@ -108,13 +139,29 @@ void usercontrol(void) {
   // User control code here, inside the loop
 
   while (1) {
+    if(!roundColor == colorTypes::undefined){
+      switch(roundColor){
+        case colorTypes::red :
+          vision7.takeSnapshot(sigRed);
+          break;
+        case colorTypes::blue :
+          vision7.takeSnapshot(sigBlue);
+          break;
+        default:
+          break;
+      }
+      if(vision7.largestObject.exists){
+        rollerMotor.spin(directionType::fwd);
+      }else{
+        rollerMotor.stop();
+      }
+    }
+
     //Left motor, vertical axis of left joystick
     motor_left.spin(vex::directionType::fwd, controller1.Axis3.position(vex::percentUnits::pct), vex::velocityUnits::pct);
     //Right motor, vertical axis of right joystick
     motor_right.spin(vex::directionType::fwd, controller1.Axis2.position(vex::percentUnits::pct), vex::velocityUnits::pct);
-    if(controller1.ButtonR1.pressing()) shoot();
-    if(controller1.ButtonB.pressing()) expand();
-    if(controller1.ButtonX.pressing()) setIntake();
+    
     wait(20, msec);
   }
 }
