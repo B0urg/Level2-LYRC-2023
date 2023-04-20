@@ -10,6 +10,10 @@ extern vex::limit      LimitB;
 extern vex::motor      expandLeft;
 extern vex::motor      expandRight;
 extern vex::motor      intakeMotor;
+extern vex::vision     vision7;
+extern vex::vision::signature sigBlue;
+extern vex::vision::signature sigRed;
+extern vex::motor      rollerMotor;
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *
