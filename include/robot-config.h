@@ -14,6 +14,7 @@ extern vex::vision     vision7;
 extern vex::vision::signature sigBlue;
 extern vex::vision::signature sigRed;
 extern vex::motor      rollerMotor;
+extern vex::drivetrain Drivetrain;
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *

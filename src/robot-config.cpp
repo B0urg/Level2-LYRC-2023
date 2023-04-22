@@ -15,6 +15,7 @@ vex::motor      expandRight(vex::PORT5, vex::gearSetting::ratio18_1, true);
 vex::motor      intakeMotor(vex::PORT6, vex::gearSetting::ratio18_1, false);
 vex::vision     vision7(vex::PORT8);
 vex::motor      rollerMotor(vex::PORT7, vex::gearSetting::ratio18_1, false);
+vex::drivetrain  Drivetrain(motor_left, motor_right);
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.
  *
